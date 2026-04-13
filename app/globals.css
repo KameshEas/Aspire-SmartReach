@@ -2,100 +2,240 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design tokens (colors, spacing, radii, typography) */
+/* ============================================================
+   ASPIRE SMARTREACH — Design Token System v1.0
+   ============================================================ */
 :root {
-  --color-primary: #6C5CE7;
-  --color-primary-dark: #5A4BD1;
-  --color-secondary: #00C2A8;
-  --color-background: #0F1222;
-  --color-surface: #1A1F36;
-  --color-card: #222845;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #AAB0C0;
-  --color-border: #2E3558;
-  --color-success: #00D084;
-  --color-warning: #FFB020;
-  --color-error: #FF5C5C;
+  /* --- Brand Palette --- */
+  --brand-purple:       #7C3AED;
+  --brand-blue:         #2563EB;
+  --brand-purple-light: #A78BFA;
+  --brand-blue-light:   #60A5FA;
+  --brand-emerald:      #10B981;
 
-  --font-sans: Inter, "SF Pro Text", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  /* --- Background Scale --- */
+  --bg-base:            #080C1A;   /* deep midnight navy */
+  --bg-surface:         #0D1225;
+  --bg-card:            #111829;
+  --bg-elevated:        #18203A;
 
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-5: 24px;
-  --spacing-6: 32px;
+  /* --- Text --- */
+  --text-primary:       #F8FAFC;
+  --text-secondary:     #94A3B8;
+  --text-muted:         #64748B;
 
-  --radius: 16px;
-  --card-radius: 20px;
+  /* --- Borders --- */
+  --border-subtle:      rgba(255,255,255,0.06);
+  --border-default:     rgba(255,255,255,0.10);
+  --border-active:      rgba(124,58,237,0.50);
 
-  --glass-bg: rgba(255,255,255,0.03);
-  --glass-border: rgba(255,255,255,0.06);
-  --cta-glow: 0 10px 40px rgba(108,92,231,0.25);
+  /* --- Glows & Shadows --- */
+  --glow-purple:        0 0 40px rgba(124,58,237,0.35);
+  --glow-blue:          0 0 40px rgba(37,99,235,0.25);
+  --glow-card:          0 8px 40px rgba(0,0,0,0.65), 0 0 0 1px rgba(124,58,237,0.12);
+  --glow-cta:           0 12px 40px rgba(124,58,237,0.40);
+
+  /* --- Gradients --- */
+  --gradient-brand:     linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
+  --gradient-brand-45:  linear-gradient(45deg,  #7C3AED 0%, #2563EB 100%);
+  --gradient-surface:   linear-gradient(180deg, #0D1225 0%, #080C1A 100%);
+  --gradient-card:      linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(37,99,235,0.05) 100%);
+
+  /* --- Glass --- */
+  --glass-bg:           rgba(255,255,255,0.025);
+  --glass-border:       rgba(255,255,255,0.08);
+
+  /* --- Typography --- */
+  --font-sans:          Inter, "SF Pro Text", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:          ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+
+  /* --- Radius Scale --- */
+  --radius-sm:          6px;
+  --radius-md:          12px;
+  --radius-lg:          16px;
+  --radius-xl:          24px;
+  --radius-2xl:         32px;
+
+  /* --- Motion --- */
+  --motion-fast:        120ms ease-out;
+  --motion-std:         250ms ease-out;
+  --motion-slow:        500ms ease-out;
+
+  /* Legacy aliases (backwards compat) */
+  --color-primary:      var(--brand-purple);
+  --color-primary-dark: #6D28D9;
+  --color-background:   var(--bg-base);
+  --color-surface:      var(--bg-surface);
+  --color-card:         var(--bg-card);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border:       var(--border-default);
+  --color-success:      var(--brand-emerald);
+  --color-warning:      #F59E0B;
+  --color-error:        #EF4444;
+  --card-radius:        var(--radius-xl);
+  --glass-border:       var(--border-subtle);
+  --cta-glow:           var(--glow-cta);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-background: #FFFFFF;
-    --color-surface: #F7F8FB;
-    --color-text-primary: #0F1222;
-    --color-text-secondary: #4B5563;
-    --glass-bg: rgba(255,255,255,0.6);
-    --glass-border: rgba(16,24,40,0.06);
-  }
-}
-
-/* Base */
-html, body, #__next { height: 100%; }
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: var(--font-sans); }
-body {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  line-height: 1.35;
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
-/* Glassmorphism surface */
+/* ============================================================
+   GRADIENT TEXT UTILITY
+   ============================================================ */
+.gradient-text {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ============================================================
+   GLASSMORPHISM SURFACE
+   ============================================================ */
 .glass {
-  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(37,99,235,0.02));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--card-radius);
-  box-shadow: 0 8px 30px rgba(3,6,23,0.6);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.65);
 }
 
-.card {
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--card-radius);
-  padding: var(--spacing-4);
-  box-shadow: 0 6px 22px rgba(3,6,23,0.55);
+/* ============================================================
+   GLOW CARD
+   ============================================================ */
+.glow-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glow-card);
+  transition: border-color var(--motion-std), box-shadow var(--motion-std), transform var(--motion-std);
+}
+.glow-card:hover {
+  border-color: var(--border-active);
+  box-shadow: var(--glow-card), var(--glow-purple);
+  transform: translateY(-2px);
 }
 
-/* CTA - neon highlight */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
-  color: var(--color-text-primary);
-  border-radius: calc(var(--radius));
-  box-shadow: var(--cta-glow);
-  transition: transform 120ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-brand);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glow-cta);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
   border: none;
+  cursor: pointer;
+  transition: transform var(--motion-fast), box-shadow var(--motion-std);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 50px rgba(108,92,231,0.28); }
-.btn-primary:active { transform: translateY(0); box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 50px rgba(124,58,237,0.45);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
 
-/* Micro-interactions */
-.interactive { transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease; will-change: transform; }
-.focus-ring:focus { outline: 2px solid transparent; box-shadow: 0 0 0 4px rgba(108,92,231,0.08); border-radius: calc(var(--radius)); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: border-color var(--motion-fast), background var(--motion-fast), transform var(--motion-fast);
+}
+.btn-ghost:hover {
+  border-color: var(--border-active);
+  background: rgba(124,58,237,0.08);
+  transform: translateY(-1px);
+}
 
-/* Utility helpers */
-.muted { color: var(--color-text-secondary); }
+/* ============================================================
+   MICRO-INTERACTIONS
+   ============================================================ */
+.interactive {
+  transition: transform var(--motion-fast), box-shadow var(--motion-std);
+  will-change: transform;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--brand-purple);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-purple); }
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   MARQUEE (Social Proof Logo Strip)
+   ============================================================ */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ============================================================
+   UTILITY HELPERS
+   ============================================================ */
+.muted { color: var(--text-secondary); }
+.section-padding { padding: 6rem 1.5rem; }
+@media (min-width: 768px) { .section-padding { padding: 7rem 2rem; } }
+@media (min-width: 1280px) { .section-padding { padding: 8rem 0; } }
 .border-weak { border-color: var(--color-border); }
