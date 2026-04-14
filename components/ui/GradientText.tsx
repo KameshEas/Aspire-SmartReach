@@ -3,7 +3,7 @@ import React from "react";
 interface GradientTextProps {
   children: React.ReactNode;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
   from?: string;
   to?: string;
 }
