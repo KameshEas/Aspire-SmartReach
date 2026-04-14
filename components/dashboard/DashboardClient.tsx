@@ -10,13 +10,6 @@ type User = { id: string; name: string; email?: string; plan?: string; avatar?: 
 export default function DashboardClient() {
   const [user, setUser] = useState<User>(null);
   const [loading, setLoading] = useState(true);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    } catch (err) {
-      return false;
-    }
-  });
 
   useEffect(() => {
     let mounted = true;
@@ -35,17 +28,8 @@ export default function DashboardClient() {
     return () => { mounted = false };
   }, []);
 
-  // sync with sidebar collapsed state (listens for custom event)
-  useEffect(() => {
-    const handler = (e: any) => {
-      setSidebarCollapsed(Boolean(e?.detail));
-    };
-    window.addEventListener('sidebar:toggle', handler);
-    return () => window.removeEventListener('sidebar:toggle', handler);
-  }, []);
-
   return (
-    <div style={{ marginLeft: sidebarCollapsed ? 80 : 256, transition: 'margin-left 300ms ease-in-out' }} className="p-8 min-h-screen bg-slate-900 text-slate-100">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-bold tracking-tight">Generate New Outreach</h3>
         <div className="flex items-center gap-3">

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { Home, Send, FileText, MessageSquare, BarChart3, CreditCard, Settings, LogOut, ChevronLeft } from "lucide-react";
 
 export default function Sidebar() {
@@ -14,6 +14,20 @@ export default function Sidebar() {
     }
   });
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    try {
+      if (!pathname) return false;
+      if (pathname === href) return true;
+      return pathname.startsWith(href + "/");
+    } catch (err) {
+      return false;
+    }
+  };
+
+  const activeCollapsed = "bg-slate-700 text-white";
+  const activeExpanded = "bg-slate-800 text-white font-medium";
 
   const toggle = () => {
     const next = !collapsed;
@@ -61,39 +75,67 @@ export default function Sidebar() {
       </div>
 
       <nav className={`flex-1 flex flex-col gap-1 ${collapsed ? "items-center" : ""}`}>
-        <Link href="/dashboard" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded} ${!collapsed ? "bg-slate-800 text-white font-medium" : ""}`}>
+        <Link
+          href="/dashboard"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/dashboard') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/dashboard') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/dashboard') && !collapsed ? 'page' : undefined}
+        >
           <Home className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Dashboard</span>
         </Link>
 
-        <Link href="/generate-message" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/generate-message"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/generate-message') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/generate-message') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/generate-message') && !collapsed ? 'page' : undefined}
+        >
           <Send className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Generate Message</span>
         </Link>
 
-        <Link href="/templates" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/templates"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/templates') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/templates') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/templates') && !collapsed ? 'page' : undefined}
+        >
           <FileText className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Templates</span>
         </Link>
 
-        <Link href="/conversations" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/conversations"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/conversations') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/conversations') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/conversations') && !collapsed ? 'page' : undefined}
+        >
           <MessageSquare className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Conversations</span>
         </Link>
 
-        <Link href="/analytics" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/analytics"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/analytics') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/analytics') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/analytics') && !collapsed ? 'page' : undefined}
+        >
           <BarChart3 className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Analytics</span>
         </Link>
 
         <div className="my-4 border-t border-slate-700 w-full" />
 
-        <Link href="/billing" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/billing"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/billing') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/billing') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/billing') && !collapsed ? 'page' : undefined}
+        >
           <CreditCard className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Billing</span>
         </Link>
 
-        <Link href="/settings" className={`${collapsed ? baseLinkCollapsed : baseLinkExpanded}`}>
+        <Link
+          href="/settings"
+          className={`${collapsed ? baseLinkCollapsed + (isActive('/settings') ? ' ' + activeCollapsed : '') : baseLinkExpanded + (isActive('/settings') ? ' ' + activeExpanded : '')}`}
+          aria-current={isActive('/settings') && !collapsed ? 'page' : undefined}
+        >
           <Settings className="h-5 w-5 transition-transform duration-200 transform group-hover:scale-110 group-hover:text-white motion-reduce:transform-none" />
           <span className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0 ml-0' : 'max-w-[140px] opacity-100 ml-2'}`}>Settings</span>
         </Link>

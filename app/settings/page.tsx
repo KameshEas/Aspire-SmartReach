@@ -1,15 +1,8 @@
-import Sidebar from "@/components/dashboard/Sidebar";
-
 export default function Page() {
   return (
-    <>
-      <Sidebar />
-      <main className="ml-64 p-8 min-h-screen">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold">Settings</h1>
-          <p className="mt-2 text-sm text-slate-400">Placeholder page — settings UI will be implemented later.</p>
-        </div>
-      </main>
-    </>
+    <div className="max-w-7xl mx-auto">
+      <h1 className="text-2xl font-bold">Settings</h1>
+      <p className="mt-2 text-sm text-slate-400">Placeholder page — settings UI will be implemented later.</p>
+    </div>
   );
 }
