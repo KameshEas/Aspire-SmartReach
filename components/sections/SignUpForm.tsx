@@ -71,7 +71,7 @@ export default function SignUpForm() {
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:p-6"
+      className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:p-6 overflow-x-hidden"
       style={{ background: "var(--bg-base)" }}
     >
       {/* Background orbs */}
@@ -86,7 +86,7 @@ export default function SignUpForm() {
         />
       </div>
 
-      <main className="relative z-10 grid w-full max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-12">
+      <main className="relative z-10 grid w-full max-w-5xl min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* ============================================================ */}
         {/* Left Column — Branding (dimmed when form is focused)         */}
         {/* ============================================================ */}
@@ -94,7 +94,7 @@ export default function SignUpForm() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: formFocused ? 0.5 : 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="hidden flex-col items-start space-y-8 text-left lg:col-span-5 lg:flex"
+          className="hidden flex-col items-start space-y-8 text-left lg:col-span-5 lg:flex min-w-0"
           style={{ transition: "opacity 0.4s ease" }}
         >
           {/* Logo */}
@@ -178,25 +178,24 @@ export default function SignUpForm() {
         </motion.div>
 
         {/* ============================================================ */}
-        {/* Right Column — Sign Up Card                                  */}
+        {/* Right Column — Sign Up Card (only this block updated)      */}
         {/* ============================================================ */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="lg:col-span-7"
+          className="lg:col-span-7 min-w-0"
         >
           <div
-            className="relative overflow-hidden rounded-[2rem] p-6 shadow-2xl sm:p-8 md:p-12"
+            className="relative overflow-hidden rounded-[2rem] p-6 shadow-2xl sm:p-8 md:p-12 w-full min-w-0"
             style={{
               background: "var(--bg-card)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
               border: "1px solid var(--border-default)",
               boxShadow: "var(--glow-card)",
+              maxWidth: 'calc(100vw - 3rem)',
             }}
-            onFocus={() => setFormFocused(true)}
-            onBlur={() => setFormFocused(false)}
           >
             {/* Top nav row */}
             <div className="mb-8 flex items-center justify-between">
@@ -209,7 +208,7 @@ export default function SignUpForm() {
                 Back to Landing
               </Link>
               <Link
-                href="#"
+                href="/login"
                 className="text-sm font-semibold underline-offset-4 hover:underline"
                 style={{ color: "var(--color-brand-emerald)" }}
               >
@@ -219,7 +218,7 @@ export default function SignUpForm() {
 
             {/* Header */}
             <div className="mb-8">
-              <h3 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+              <h3 id="signup-heading" className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
                 Create your workspace
               </h3>
               <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
@@ -227,40 +226,51 @@ export default function SignUpForm() {
               </p>
             </div>
 
-            {/* ------ Form ------ */}
-            <form className="space-y-5" onSubmit={handleSubmit}>
+            {/* ------ Form (focus handled on the form to control left-column dimming) ------ */}
+            <form
+              id="signup-form"
+              className="space-y-5 min-w-0"
+              onSubmit={handleSubmit}
+              onFocus={() => setFormFocused(true)}
+              onBlur={() => setTimeout(() => setFormFocused(false), 100)}
+              aria-labelledby="signup-heading"
+            >
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 {/* Name */}
                 <div className="space-y-1.5">
-                  <label className="ml-1 flex items-baseline gap-2 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                  <label htmlFor="name" className="ml-1 flex items-baseline gap-2 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
                     Name
                     <span className="text-[11px] font-normal" style={{ color: "var(--text-muted)" }}>Optional</span>
                   </label>
-                  <input type="text" placeholder="Enter your name" className="input-field" />
+                  <input id="name" name="name" type="text" autoComplete="name" placeholder="Enter your name" className="input-field" />
                 </div>
                 {/* Email */}
                 <div className="space-y-1.5">
-                  <label className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                  <label htmlFor="email" className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
                     Email Address <span style={{ color: "var(--color-brand-purple-light)" }}>*</span>
                   </label>
-                  <input type="email" placeholder="you@company.com" className="input-field" required />
+                  <input id="email" name="email" type="email" autoComplete="email" placeholder="you@company.com" className="input-field" required aria-required="true" />
                 </div>
               </div>
 
               {/* Workspace URL */}
               <div className="space-y-1.5">
-                <label className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                <label htmlFor="workspace" className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
                   Workspace URL <span style={{ color: "var(--color-brand-purple-light)" }}>*</span>
                 </label>
-                <div className="relative flex">
+                <div className="relative flex min-w-0">
                   <input
+                    id="workspace"
+                    name="workspace"
                     type="text"
                     placeholder="your-workspace"
                     value={workspace}
                     onChange={(e) => setWorkspace(e.target.value.replace(/[^a-z0-9-]/gi, "").toLowerCase())}
-                    className="input-field flex-1"
+                    className="input-field flex-1 min-w-0"
                     style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
                     required
+                    aria-describedby="workspace-status"
+                    autoComplete="off"
                   />
                   <span
                     className="flex items-center border border-l-0 px-4 text-sm font-medium"
@@ -276,7 +286,7 @@ export default function SignUpForm() {
                 </div>
                 {/* Workspace status */}
                 {workspace && (
-                  <div className="ml-1 mt-1 flex items-center gap-1.5 text-xs font-medium">
+                  <div id="workspace-status" role="status" aria-live="polite" className="ml-1 mt-1 flex items-center gap-1.5 text-xs font-medium">
                     {wsStatus === "checking" && (
                       <>
                         <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: "var(--text-muted)" }} />
@@ -301,17 +311,21 @@ export default function SignUpForm() {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                <label htmlFor="password" className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
                   Password <span style={{ color: "var(--color-brand-purple-light)" }}>*</span>
                 </label>
                 <div className="relative">
                   <input
+                    id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="input-field w-full pr-12"
                     required
+                    aria-describedby="password-rules"
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
@@ -339,7 +353,7 @@ export default function SignUpForm() {
                 </div>
                 {/* Password rules */}
                 {password.length > 0 && (
-                  <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 px-1">
+                  <div id="password-rules" className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 px-1" aria-live="polite">
                     {PW_RULES.map((rule) => {
                       const pass = rule.test(password);
                       return (
@@ -356,19 +370,23 @@ export default function SignUpForm() {
 
               {/* Confirm Password */}
               <div className="space-y-1.5">
-                <label className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
+                <label htmlFor="confirmPassword" className="ml-1 text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>
                   Confirm Password <span style={{ color: "var(--color-brand-purple-light)" }}>*</span>
                 </label>
                 <input
+                  id="confirmPassword"
+                  name="confirmPassword"
                   type="password"
                   placeholder="Re-enter your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="input-field w-full"
                   required
+                  aria-describedby="confirm-status"
+                  autoComplete="new-password"
                 />
                 {confirmPassword.length > 0 && (
-                  <div className="ml-1 mt-1 flex items-center gap-1.5 text-[11px] font-medium">
+                  <div id="confirm-status" className="ml-1 mt-1 flex items-center gap-1.5 text-[11px] font-medium" aria-live="polite">
                     {passwordsMatch ? (
                       <>
                         <CheckCircle className="h-3 w-3" style={{ color: "var(--color-brand-emerald)" }} />
@@ -395,15 +413,16 @@ export default function SignUpForm() {
               >
                 <input
                   id="terms"
+                  name="terms"
                   type="checkbox"
                   className="mt-0.5 h-5 w-5 shrink-0 rounded"
                   style={{ accentColor: "var(--color-brand-purple)" }}
                 />
                 <span className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  I agree to the{" "}
-                  <a href="#" className="font-semibold underline" style={{ color: "var(--color-brand-purple-light)" }}>Terms of Service</a>{" "}
-                  and{" "}
-                  <a href="#" className="font-semibold underline" style={{ color: "var(--color-brand-purple-light)" }}>Privacy Policy</a>.
+                  I agree to the {" "}
+                  <Link href="/terms" className="font-semibold underline" style={{ color: "var(--color-brand-purple-light)" }}>Terms of Service</Link>{" "}
+                  and {" "}
+                  <Link href="/privacy" className="font-semibold underline" style={{ color: "var(--color-brand-purple-light)" }}>Privacy Policy</Link>.
                 </span>
               </label>
 
@@ -413,14 +432,15 @@ export default function SignUpForm() {
                 disabled={submitting}
                 className="btn-primary relative w-full py-4 text-base font-bold tracking-wide disabled:opacity-70"
                 style={{ boxShadow: "var(--glow-cta)" }}
+                aria-live="polite"
               >
                 {submitting ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <>
-                    Create Workspace
+                  <div className="flex items-center justify-center gap-3">
+                    <span>Create Workspace</span>
                     <Zap className="h-5 w-5" />
-                  </>
+                  </div>
                 )}
               </button>
               <p className="text-center text-xs" style={{ color: "var(--text-muted)" }}>
@@ -441,15 +461,16 @@ export default function SignUpForm() {
             </div>
 
             {/* Social buttons */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button
                 type="button"
-                className="social-btn"
+                className="social-btn w-full"
                 style={{
                   background: "#FFFFFF",
                   border: "1px solid #E2E8F0",
                   color: "#1F2937",
                 }}
+                aria-label="Continue with Google"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -461,12 +482,13 @@ export default function SignUpForm() {
               </button>
               <button
                 type="button"
-                className="social-btn"
+                className="social-btn w-full"
                 style={{
                   background: "var(--bg-surface)",
                   border: "1px solid var(--border-default)",
                   color: "var(--text-primary)",
                 }}
+                aria-label="Continue with GitHub"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/>
