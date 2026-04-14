@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Eye, EyeOff, Zap, Loader2, Sparkles } from "lucide-react";
 
@@ -11,11 +12,43 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
-    setTimeout(() => setSubmitting(false), 1000);
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error || "Sign in failed");
+        setSubmitting(false);
+        return;
+      }
+
+      // store a short-lived dev token locally; real auth will replace this
+      try {
+        if (data?.token) localStorage.setItem("token", data.token);
+      } catch (err) {
+        // ignore storage errors in some environments
+      }
+
+      // redirect to dashboard on success
+      router.push("/dashboard");
+    } catch (err) {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -103,6 +136,7 @@ export default function LoginForm() {
               </button>
 
               <p className="text-center text-xs" style={{ color: "var(--text-muted)" }}>Signing in is secure and fast</p>
+              {error && <p className="text-center text-sm text-red-400 mt-2">{error}</p>}
             </form>
 
             <div className="relative flex items-center py-6">

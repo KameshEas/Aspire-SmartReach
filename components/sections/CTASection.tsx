@@ -31,7 +31,7 @@ export default function CTASection() {
           faster with AI-powered personalization.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <a href="#" className="btn-primary text-base px-8 py-3">
+          <a href="/signup" className="btn-primary text-base px-8 py-3">
             Get Early Access
             <ArrowRight className="h-4 w-4" />
           </a>
