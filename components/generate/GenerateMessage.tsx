@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import VariationsGrid, { Variant as VariationType } from "./VariationsGrid";
 import Modal from "../ui/Modal";
+import AIResponseBox from "../ui/AIResponseBox";
+import ShareCard from "../ui/ShareCard";
 
 const POWER_WORDS = ["exclusive", "limited", "proven", "guaranteed", "special", "now", "join", "save", "free", "priority", "best"];
 
@@ -161,6 +163,18 @@ export default function GenerateMessage() {
     }
   };
 
+  const saveText = (text: string) => {
+    try {
+      const savedList = JSON.parse(localStorage.getItem('saved-messages') || '[]');
+      savedList.unshift({ id: Date.now(), text, createdAt: new Date().toISOString() });
+      localStorage.setItem('saved-messages', JSON.stringify(savedList.slice(0, 20)));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1600);
+    } catch (e) {
+      // ignore
+    }
+  };
+
   const powerMatches = (text: string) => {
     const lowered = text.toLowerCase();
     return POWER_WORDS.filter(w => lowered.includes(w));
@@ -176,7 +190,7 @@ export default function GenerateMessage() {
   const generateVariants = async (count = 3) => {
     setGenerating(true);
     try {
-      const res = await fetch('/api/generate-variants', {
+      const res = await fetch('/api/services/generate-variants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ platform, tone, experience, length: lengthOpt, goal, count }),
@@ -392,6 +406,46 @@ export default function GenerateMessage() {
               </div>
               <div className="text-xs text-slate-400">{saved ? 'Saved ✓' : (generating ? 'Generating…' : '')}</div>
             </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="col-span-12 lg:col-span-4 mt-4 lg:mt-0">
+        <div className="space-y-4">
+          <AIResponseBox
+            response={displayText || targetText || buildMessage()}
+            onUse={(text) => {
+              setTargetText(text);
+              setDisplayText(text);
+              setSaved(true);
+              setTimeout(() => setSaved(false), 1400);
+            }}
+            onSend={async (text) => {
+              try {
+                const res = await fetch('/api/services/messages', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ subject: goal || 'Generated outreach', body: text }),
+                });
+                if (res.ok) {
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 1400);
+                } else {
+                  // fallback to local save when backend unavailable
+                  saveText(text);
+                }
+              } catch (e) {
+                saveText(text);
+              }
+            }}
+            onSave={(text) => saveText(text)}
+            onCopy={async (text) => {
+              try { await navigator.clipboard.writeText(text); setSaved(true); setTimeout(() => setSaved(false), 1400); } catch (e) { }
+            }}
+          />
+
+          <div>
+            <ShareCard message={displayText || targetText || buildMessage()} />
           </div>
         </div>
       </div>
